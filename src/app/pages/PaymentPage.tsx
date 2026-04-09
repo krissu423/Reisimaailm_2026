@@ -1,16 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
-import { ArrowLeft, CreditCard, Lock, Check, Loader2 } from 'lucide-react';
+import { ArrowLeft, CreditCard, Lock, Loader2 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
+import { useAuth } from '../contexts/AuthContext';
+import { useBooking } from '../contexts/BookingContext';
 import { toast } from 'sonner';
 
 export function PaymentPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { trip, formData, total } = location.state || {};
+  const { isAuthenticated } = useAuth();
+  const { addBooking } = useBooking();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/');
+      toast.error('Palun logi sisse, et teha broneeringut');
+      return;
+    }
+  }, [isAuthenticated, navigate]);
 
   const [paymentData, setPaymentData] = useState({
     cardNumber: '',
@@ -36,27 +48,31 @@ export function PaymentPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     setIsProcessing(true);
-    
+
     // Simulate payment processing
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
+    // Create booking
+    const newBooking = {
+      bookingId: `BK${Date.now()}`,
+      destination: trip.destination,
+      image: trip.image,
+      date: trip.date,
+      duration: trip.duration,
+      guests: formData.guests,
+      totalPaid: total,
+      status: 'Kinnitatud',
+    };
+
+    addBooking(newBooking);
+
     toast.success('Makse õnnestus! Broneering kinnitatud.');
     setIsProcessing(false);
-    
-    // Navigate to My Trips with success state
-    navigate('/my-trips', { 
-      state: { 
-        newBooking: {
-          ...trip,
-          bookingId: `BK${Date.now()}`,
-          status: 'Kinnitatud',
-          totalPaid: total,
-          guests: formData.guests,
-        }
-      } 
-    });
+
+    // Navigate to My Trips
+    navigate('/my-trips');
   };
 
   const handleChange = (field: string, value: string) => {

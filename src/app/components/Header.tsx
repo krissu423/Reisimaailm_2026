@@ -77,7 +77,10 @@ export function Header() {
                 </Button>
               </div>
             ) : (
-              <Button onClick={() => setLoginOpen(true)}>
+              <Button onClick={() => {
+                console.log('Login button clicked');
+                setLoginOpen(true);
+              }}>
                 Logi sisse
               </Button>
             )}

@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Search, MapPin, Calendar, Users, Star, Sparkles, Globe2, Shield } from 'lucide-react';
+import { Search, MapPin, Star, Sparkles, Globe2, Shield } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Card, CardContent } from '../components/ui/card';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { DateRangePicker } from '../components/DateRangePicker';
+import { GuestSelector } from '../components/GuestSelector';
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -82,24 +84,14 @@ export function HomePage() {
                     className="pl-10"
                   />
                 </div>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <Input
-                    placeholder="Kuupäevad"
-                    value={dates}
-                    onChange={(e) => setDates(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-                <div className="relative">
-                  <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <Input
-                    placeholder="Külalised"
-                    value={guests}
-                    onChange={(e) => setGuests(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
+                <DateRangePicker
+                  value={dates}
+                  onChange={setDates}
+                />
+                <GuestSelector
+                  value={guests}
+                  onChange={setGuests}
+                />
               </div>
               <Button 
                 onClick={handleSearch} 

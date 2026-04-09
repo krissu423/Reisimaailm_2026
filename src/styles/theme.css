@@ -18,7 +18,7 @@
   --accent-foreground: #3a403b;
   --destructive: #d4183d;
   --destructive-foreground: #ffffff;
-  --border: rgba(23, 103, 135, 0.2);
+  --border: rgba(23, 103, 135, 0.5);
   --input: transparent;
   --input-background: #ffffff;
   --switch-background: #176787;
@@ -58,7 +58,7 @@
   --accent-foreground: #002124;
   --destructive: oklch(0.396 0.141 25.723);
   --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: rgba(120, 200, 232, 0.2);
+  --border: rgba(120, 200, 232, 0.5);
   --input: rgba(120, 200, 232, 0.1);
   --input-background: #003338; /* Fixed: proper dark background for inputs */
   --ring: #78c8e8;

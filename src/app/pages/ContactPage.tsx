@@ -82,7 +82,7 @@ export function ContactPage() {
                     <textarea
                       id="message"
                       required
-                      className="w-full min-h-32 px-3 py-2 rounded-md border bg-input-background"
+                      className="w-full min-h-32 px-3 py-2 rounded-md border-2 border-border bg-input-background text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none transition-[color,box-shadow]"
                       value={formData.message}
                       onChange={(e) => handleChange('message', e.target.value)}
                     />

@@ -8,6 +8,7 @@ import { Label } from '../components/ui/label';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { GuestSelector } from '../components/GuestSelector';
 
 export function BookingPage() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ export function BookingPage() {
     lastName: '',
     email: '',
     phone: '',
-    guests: 1,
+    guests: '1 külalist',
     specialRequests: '',
   });
 
@@ -39,29 +40,31 @@ export function BookingPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!isAuthenticated) {
       toast.error('Palun logi esmalt sisse');
       return;
     }
 
     // Calculate total
-    const total = trip.price * formData.guests;
-    
-    navigate('/payment', { 
-      state: { 
-        trip, 
+    const guestCount = parseInt(formData.guests.split(' ')[0]) || 1;
+    const total = trip.price * guestCount;
+
+    navigate('/payment', {
+      state: {
+        trip,
         formData,
-        total 
-      } 
+        total
+      }
     });
   };
 
-  const handleChange = (field: string, value: string | number) => {
+  const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const totalPrice = trip.price * formData.guests;
+  const guestCount = parseInt(formData.guests.split(' ')[0]) || 1;
+  const totalPrice = trip.price * guestCount;
 
   return (
     <div className="min-h-screen py-8 px-4">
@@ -134,14 +137,9 @@ export function BookingPage() {
 
                   <div className="space-y-2">
                     <Label htmlFor="guests">Külaliste arv *</Label>
-                    <Input
-                      id="guests"
-                      type="number"
-                      min="1"
-                      max="10"
-                      required
+                    <GuestSelector
                       value={formData.guests}
-                      onChange={(e) => handleChange('guests', parseInt(e.target.value))}
+                      onChange={(value) => handleChange('guests', value)}
                     />
                   </div>
 
@@ -149,7 +147,7 @@ export function BookingPage() {
                     <Label htmlFor="specialRequests">Eritooted või soovidused</Label>
                     <textarea
                       id="specialRequests"
-                      className="w-full min-h-24 px-3 py-2 rounded-md border bg-input-background"
+                      className="w-full min-h-24 px-3 py-2 rounded-md border-2 border-border bg-input-background text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none transition-[color,box-shadow]"
                       value={formData.specialRequests}
                       onChange={(e) => handleChange('specialRequests', e.target.value)}
                     />
@@ -202,7 +200,7 @@ export function BookingPage() {
                       <Users className="w-4 h-4" />
                       Külalised
                     </span>
-                    <span>{formData.guests}</span>
+                    <span>{guestCount}</span>
                   </div>
                 </div>
 
