@@ -229,13 +229,13 @@ export function PaymentPage() {
 
                   <div className="space-y-1">
                     <p className="text-sm font-semibold">Külalised</p>
-                    <p className="text-sm text-muted-foreground">{formData.guests} inimest</p>
+                    <p className="text-sm text-muted-foreground">{formData.guests}</p>
                   </div>
                 </div>
 
                 <div className="border-t pt-4 space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span>Hind ({formData.guests}x €{trip.price})</span>
+                    <span>Hind ({formData.guests} × €{trip.price})</span>
                     <span>€{trip.price * formData.guests}</span>
                   </div>
                   <div className="flex justify-between text-sm">

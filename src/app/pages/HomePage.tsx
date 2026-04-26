@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Search, MapPin, Star, Sparkles, Globe2, Shield } from 'lucide-react';
+import { Search, MapPin, Star, Sparkles, Globe2, Shield, Euro } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Card, CardContent } from '../components/ui/card';
@@ -13,49 +13,56 @@ export function HomePage() {
   const [destination, setDestination] = useState('');
   const [dates, setDates] = useState('');
   const [guests, setGuests] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
 
   const handleSearch = () => {
-    navigate('/search', { 
-      state: { destination, dates, guests }
+    navigate('/search', {
+      state: { destination, dates, guests, maxPrice }
     });
   };
 
   const popularDestinations = [
-    { 
-      name: 'Pariis, Prantsusmaa', 
-      image: 'https://images.unsplash.com/photo-1642947392578-b37fbd9a4d45?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJpcyUyMGVpZmZlbCUyMHRvd2VyJTIwc3Vuc2V0fGVufDF8fHx8MTc3NDIzNDgwNHww&ixlib=rb-4.1.0&q=80&w=1080', 
-      price: '€499', 
-      rating: 4.8 
+    {
+      name: 'Pariis, Prantsusmaa',
+      image: 'https://images.unsplash.com/photo-1642947392578-b37fbd9a4d45?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJpcyUyMGVpZmZlbCUyMHRvd2VyJTIwc3Vuc2V0fGVufDF8fHx8MTc3NDIzNDgwNHww&ixlib=rb-4.1.0&q=80&w=1080',
+      price: '€499',
+      description: 'Avasta romantiline Pariis - Eiffeli torn, Louvre ja Seine jõgi',
+      rating: 4.8
     },
-    { 
-      name: 'Rooma, Itaalia', 
-      image: 'https://images.unsplash.com/photo-1662898290891-a6c7f022e851?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb21lJTIwY29sb3NzZXVtJTIwYW5jaWVudHxlbnwxfHx8fDE3NzQyNDU0MDN8MA&ixlib=rb-4.1.0&q=80&w=1080', 
-      price: '€549', 
-      rating: 4.9 
+    {
+      name: 'Rooma, Itaalia',
+      image: 'https://images.unsplash.com/photo-1662898290891-a6c7f022e851?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb21lJTIwY29sb3NzZXVtJTIwYW5jaWVudHxlbnwxfHx8fDE3NzQyNDU0MDN8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      price: '€549',
+      description: 'Külasta Colosseum, Vatikaani ja muistset ajalugu',
+      rating: 4.9
     },
-    { 
-      name: 'Barcelona, Hispaania', 
-      image: 'https://images.unsplash.com/photo-1664027802288-293c4ebdcf95?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYXJjZWxvbmElMjBzYWdyYWRhJTIwZmFtaWxpYSUyMGFyY2hpdGVjdHVyZXxlbnwxfHx8fDE3NzQyODU0ODd8MA&ixlib=rb-4.1.0&q=80&w=1080', 
-      price: '€479', 
-      rating: 4.7 
+    {
+      name: 'Barcelona, Hispaania',
+      image: 'https://images.unsplash.com/photo-1664027802288-293c4ebdcf95?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYXJjZWxvbmElMjBzYWdyYWRhJTIwZmFtaWxpYSUyMGFyY2hpdGVjdHVyZXxlbnwxfHx8fDE3NzQyODU0ODd8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      price: '€479',
+      description: 'Gaudi arhitektuur, Sagrada Familia ja Vahemereline kultuur',
+      rating: 4.7
     },
-    { 
-      name: 'Amsterdam, Holland', 
-      image: 'https://images.unsplash.com/photo-1703630397392-c11a6751ca93?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhbXN0ZXJkYW0lMjBjYW5hbHMlMjBob3VzZXN8ZW58MXx8fHwxNzc0MjU1Njg5fDA&ixlib=rb-4.1.0&q=80&w=1080', 
-      price: '€429', 
-      rating: 4.6 
+    {
+      name: 'Amsterdam, Holland',
+      image: 'https://images.unsplash.com/photo-1703630397392-c11a6751ca93?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhbXN0ZXJkYW0lMjBjYW5hbHMlMjBob3VzZXN8ZW58MXx8fHwxNzc0MjU1Njg5fDA&ixlib=rb-4.1.0&q=80&w=1080',
+      price: '€429',
+      description: 'Kanalid, Van Gogh muuseum ja jalgrattasõit linna südames',
+      rating: 4.6
     },
-    { 
-      name: 'Kreeka, Santorini', 
-      image: 'https://images.unsplash.com/photo-1671760085670-2be5869f38dd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYW50b3JpbmklMjBncmVlY2UlMjBibHVlJTIwZG9tZXN8ZW58MXx8fHwxNzc0MTk5NjYwfDA&ixlib=rb-4.1.0&q=80&w=1080', 
-      price: '€699', 
-      rating: 4.9 
+    {
+      name: 'Kreeka, Santorini',
+      image: 'https://images.unsplash.com/photo-1671760085670-2be5869f38dd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYW50b3JpbmklMjBncmVlY2UlMjBibHVlJTIwZG9tZXN8ZW58MXx8fHwxNzc0MTk5NjYwfDA&ixlib=rb-4.1.0&q=80&w=1080',
+      price: '€699',
+      description: 'Valged majad, sinised kuplistid ja võrratu päikeseloojang',
+      rating: 4.9
     },
-    { 
-      name: 'Phuket, Tai', 
-      image: 'https://images.unsplash.com/photo-1663899755806-fec4cf21ec62?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaHVrZXQlMjB0aGFpbGFuZCUyMGJlYWNoJTIwcGFyYWRpc2V8ZW58MXx8fHwxNzc0Mjk2MTI3fDA&ixlib=rb-4.1.0&q=80&w=1080', 
-      price: '€849', 
-      rating: 4.8 
+    {
+      name: 'Phuket, Tai',
+      image: 'https://images.unsplash.com/photo-1663899755806-fec4cf21ec62?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaHVrZXQlMjB0aGFpbGFuZCUyMGJlYWNoJTIwcGFyYWRpc2V8ZW58MXx8fHwxNzc0Mjk2MTI3fDA&ixlib=rb-4.1.0&q=80&w=1080',
+      price: '€849',
+      description: 'Troopilised rannad, kristallselge vesi ja Tai kultuur',
+      rating: 4.8
     },
   ];
 
@@ -74,7 +81,7 @@ export function HomePage() {
           {/* Search Box */}
           <Card className="shadow-xl">
             <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <Input
@@ -92,9 +99,19 @@ export function HomePage() {
                   value={guests}
                   onChange={setGuests}
                 />
+                <div className="relative">
+                  <Euro className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Input
+                    placeholder="Max hind"
+                    type="number"
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
               </div>
-              <Button 
-                onClick={handleSearch} 
+              <Button
+                onClick={handleSearch}
                 className="w-full md:w-auto gap-2"
                 size="lg"
               >
@@ -165,9 +182,9 @@ export function HomePage() {
   );
 }
 
-function DestinationCard({ name, image, price, rating }: { name: string; image: string; price: string; rating: number }) {
+function DestinationCard({ name, image, price, rating, description }: { name: string; image: string; price: string; rating: number; description?: string }) {
   const navigate = useNavigate();
-  
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group" onClick={() => navigate('/search')}>
       <div className="aspect-[4/3] bg-muted relative overflow-hidden">
@@ -182,6 +199,9 @@ function DestinationCard({ name, image, price, rating }: { name: string; image: 
       </div>
       <CardContent className="p-4">
         <h3 className="mb-2">{name}</h3>
+        {description && (
+          <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{description}</p>
+        )}
         <div className="flex items-center gap-1 text-sm text-muted-foreground">
           <Star className="w-4 h-4 fill-accent text-accent" />
           <span>{rating}</span>
