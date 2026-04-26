@@ -57,7 +57,7 @@ export function SearchPage() {
       price: 429,
       rating: 4.6,
       reviews: 203,
-      includes: ['Lennupiletid', 'Hotell', 'Jalgrattarendi'],
+      includes: ['Lennupiletid', 'Hotell', 'Jalgrattarent'],
       date: '5-8 Mai 2026'
     },
     {
