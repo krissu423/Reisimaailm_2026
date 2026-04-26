@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router';
-import { ArrowLeft, Star, MapPin, Calendar, Users, Heart } from 'lucide-react';
+import { ArrowLeft, Star, MapPin, Calendar, Users, Heart, Euro } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
+import { Input } from '../components/ui/input';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 
 export function SearchPage() {
@@ -12,6 +13,7 @@ export function SearchPage() {
   const searchParams = location.state || {};
 
   const [favorites, setFavorites] = useState<number[]>([]);
+  const [priceFilter, setPriceFilter] = useState<string>(searchParams.maxPrice || '');
 
   const trips = [
     {
@@ -83,10 +85,17 @@ export function SearchPage() {
   ];
 
   const toggleFavorite = (id: number) => {
-    setFavorites(prev => 
+    setFavorites(prev =>
       prev.includes(id) ? prev.filter(fav => fav !== id) : [...prev, id]
     );
   };
+
+  const filteredTrips = trips.filter(trip => {
+    if (priceFilter && trip.price > parseInt(priceFilter)) {
+      return false;
+    }
+    return true;
+  });
 
   return (
     <div className="min-h-screen py-8 px-4">
@@ -107,14 +116,36 @@ export function SearchPage() {
             Saadaolevad reisid
           </h1>
           <p className="text-muted-foreground">
-            Leidsime {trips.length} pakkumist
+            Leidsime {filteredTrips.length} pakkumist
             {searchParams.destination && ` sihtkohta "${searchParams.destination}"`}
           </p>
         </div>
 
+        {/* Price Filter */}
+        <div className="mb-6 flex gap-4 items-end">
+          <div className="flex-1 max-w-xs">
+            <label className="text-sm font-medium mb-2 block">Maksimaalne hind</label>
+            <div className="relative">
+              <Euro className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Input
+                placeholder="Sisesta max hind"
+                type="number"
+                value={priceFilter}
+                onChange={(e) => setPriceFilter(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
+          {priceFilter && (
+            <Button variant="outline" onClick={() => setPriceFilter('')}>
+              Tühista filter
+            </Button>
+          )}
+        </div>
+
         {/* Results */}
         <div className="space-y-6">
-          {trips.map((trip) => (
+          {filteredTrips.map((trip) => (
             <Card key={trip.id} className="overflow-hidden hover:shadow-lg transition-all duration-300">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-6">
                 {/* Image */}
