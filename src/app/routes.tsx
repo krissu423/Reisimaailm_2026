@@ -5,7 +5,6 @@ import { SearchPage } from "./pages/SearchPage";
 import { BookingPage } from "./pages/BookingPage";
 import { PaymentPage } from "./pages/PaymentPage";
 import { MyTripsPage } from "./pages/MyTripsPage";
-import { AccountPage } from "./pages/AccountPage";
 import { DocumentsPage } from "./pages/DocumentsPage";
 import { ContactPage } from "./pages/ContactPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
@@ -14,7 +13,9 @@ import { TermsPage } from "./pages/TermsPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
 import { FAQPage } from "./pages/FAQPage";
 
-export const router = createBrowserRouter([
+import { createHashRouter } from "react-router";
+
+export const router = createHashRouter([
   {
     path: "/",
     element: <Layout />,
@@ -24,7 +25,6 @@ export const router = createBrowserRouter([
       { path: "booking", element: <BookingPage /> },
       { path: "payment", element: <PaymentPage /> },
       { path: "my-trips", element: <MyTripsPage /> },
-      { path: "account", element: <AccountPage /> },
       { path: "documents", element: <DocumentsPage /> },
       { path: "contact", element: <ContactPage /> },
       { path: "about", element: <AboutPage /> },

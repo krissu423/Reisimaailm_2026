@@ -16,23 +16,14 @@ export function BookingPage() {
   const { isAuthenticated } = useAuth();
   const trip = location.state?.trip;
 
-  interface GuestData {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-  }
-
-  const [primaryGuest, setPrimaryGuest] = useState({
+  const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
+    guests: '1 külalist',
+    specialRequests: '',
   });
-
-  const [guestCount, setGuestCount] = useState('1 külalist');
-  const [additionalGuests, setAdditionalGuests] = useState<GuestData[]>([]);
-  const [specialRequests, setSpecialRequests] = useState('');
 
   if (!trip) {
     return (
@@ -47,37 +38,6 @@ export function BookingPage() {
     );
   }
 
-  const handleGuestCountChange = (value: string) => {
-    const count = parseInt(value.split(' ')[0]) || 1;
-    setGuestCount(value);
-
-    // Adjust additional guests array
-    const currentAdditionalCount = additionalGuests.length;
-    const newAdditionalCount = count - 1; // -1 because primary guest is separate
-
-    if (newAdditionalCount > currentAdditionalCount) {
-      // Add more guest slots
-      const newGuests = [...additionalGuests];
-      for (let i = currentAdditionalCount; i < newAdditionalCount; i++) {
-        newGuests.push({ firstName: '', lastName: '', email: '', phone: '' });
-      }
-      setAdditionalGuests(newGuests);
-    } else if (newAdditionalCount < currentAdditionalCount) {
-      // Remove extra guest slots
-      setAdditionalGuests(additionalGuests.slice(0, newAdditionalCount));
-    }
-  };
-
-  const handlePrimaryGuestChange = (field: string, value: string) => {
-    setPrimaryGuest(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleAdditionalGuestChange = (index: number, field: string, value: string) => {
-    const newGuests = [...additionalGuests];
-    newGuests[index] = { ...newGuests[index], [field]: value };
-    setAdditionalGuests(newGuests);
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -87,28 +47,24 @@ export function BookingPage() {
     }
 
     // Calculate total
-    const count = parseInt(guestCount.split(' ')[0]) || 1;
-    const total = trip.price * count;
-
-    // Combine all guest data
-    const allGuests = [primaryGuest, ...additionalGuests];
+    const guestCount = parseInt(formData.guests.split(' ')[0]) || 1;
+    const total = trip.price * guestCount;
 
     navigate('/payment', {
       state: {
         trip,
-        formData: {
-          ...primaryGuest,
-          guests: guestCount,
-          allGuests,
-          specialRequests
-        },
+        formData,
         total
       }
     });
   };
 
-  const count = parseInt(guestCount.split(' ')[0]) || 1;
-  const totalPrice = trip.price * count;
+  const handleChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const guestCount = parseInt(formData.guests.split(' ')[0]) || 1;
+  const totalPrice = trip.price * guestCount;
 
   return (
     <div className="min-h-screen py-8 px-4">
@@ -132,22 +88,7 @@ export function BookingPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Külaliste arv</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <Label htmlFor="guests">Mitu inimest reisib? *</Label>
-                    <GuestSelector
-                      value={guestCount}
-                      onChange={handleGuestCountChange}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Peamine reisija andmed</CardTitle>
+                  <CardTitle>Reisija andmed</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -156,8 +97,8 @@ export function BookingPage() {
                       <Input
                         id="firstName"
                         required
-                        value={primaryGuest.firstName}
-                        onChange={(e) => handlePrimaryGuestChange('firstName', e.target.value)}
+                        value={formData.firstName}
+                        onChange={(e) => handleChange('firstName', e.target.value)}
                       />
                     </div>
                     <div className="space-y-2">
@@ -165,8 +106,8 @@ export function BookingPage() {
                       <Input
                         id="lastName"
                         required
-                        value={primaryGuest.lastName}
-                        onChange={(e) => handlePrimaryGuestChange('lastName', e.target.value)}
+                        value={formData.lastName}
+                        onChange={(e) => handleChange('lastName', e.target.value)}
                       />
                     </div>
                   </div>
@@ -178,8 +119,8 @@ export function BookingPage() {
                         id="email"
                         type="email"
                         required
-                        value={primaryGuest.email}
-                        onChange={(e) => handlePrimaryGuestChange('email', e.target.value)}
+                        value={formData.email}
+                        onChange={(e) => handleChange('email', e.target.value)}
                       />
                     </div>
                     <div className="space-y-2">
@@ -188,79 +129,27 @@ export function BookingPage() {
                         id="phone"
                         type="tel"
                         required
-                        value={primaryGuest.phone}
-                        onChange={(e) => handlePrimaryGuestChange('phone', e.target.value)}
+                        value={formData.phone}
+                        onChange={(e) => handleChange('phone', e.target.value)}
                       />
                     </div>
                   </div>
-                </CardContent>
-              </Card>
 
-              {additionalGuests.map((guest, index) => (
-                <Card key={index}>
-                  <CardHeader>
-                    <CardTitle>Reisija {index + 2} andmed</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor={`guest-${index}-firstName`}>Eesnimi *</Label>
-                        <Input
-                          id={`guest-${index}-firstName`}
-                          required
-                          value={guest.firstName}
-                          onChange={(e) => handleAdditionalGuestChange(index, 'firstName', e.target.value)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor={`guest-${index}-lastName`}>Perekonnanimi *</Label>
-                        <Input
-                          id={`guest-${index}-lastName`}
-                          required
-                          value={guest.lastName}
-                          onChange={(e) => handleAdditionalGuestChange(index, 'lastName', e.target.value)}
-                        />
-                      </div>
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="guests">Külaliste arv *</Label>
+                    <GuestSelector
+                      value={formData.guests}
+                      onChange={(value) => handleChange('guests', value)}
+                    />
+                  </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor={`guest-${index}-email`}>E-post *</Label>
-                        <Input
-                          id={`guest-${index}-email`}
-                          type="email"
-                          required
-                          value={guest.email}
-                          onChange={(e) => handleAdditionalGuestChange(index, 'email', e.target.value)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor={`guest-${index}-phone`}>Telefon *</Label>
-                        <Input
-                          id={`guest-${index}-phone`}
-                          type="tel"
-                          required
-                          value={guest.phone}
-                          onChange={(e) => handleAdditionalGuestChange(index, 'phone', e.target.value)}
-                        />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Lisainfo</CardTitle>
-                </CardHeader>
-                <CardContent>
                   <div className="space-y-2">
                     <Label htmlFor="specialRequests">Eritooted või soovidused</Label>
                     <textarea
                       id="specialRequests"
                       className="w-full min-h-24 px-3 py-2 rounded-md border-2 border-border bg-input-background text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none transition-[color,box-shadow]"
-                      value={specialRequests}
-                      onChange={(e) => setSpecialRequests(e.target.value)}
+                      value={formData.specialRequests}
+                      onChange={(e) => handleChange('specialRequests', e.target.value)}
                     />
                   </div>
                 </CardContent>
@@ -311,7 +200,7 @@ export function BookingPage() {
                       <Users className="w-4 h-4" />
                       Külalised
                     </span>
-                    <span>{count}</span>
+                    <span>{guestCount}</span>
                   </div>
                 </div>
 

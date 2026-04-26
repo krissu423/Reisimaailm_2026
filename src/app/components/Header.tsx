@@ -65,7 +65,7 @@ export function Header() {
 
             {isAuthenticated ? (
               <div className="flex items-center gap-3">
-                <Link to="/account">
+                <Link to="/my-trips">
                   <Button variant="ghost" size="sm" className="gap-2">
                     <User className="w-4 h-4" />
                     {user?.name}
