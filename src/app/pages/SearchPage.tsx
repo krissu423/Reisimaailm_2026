@@ -25,7 +25,8 @@ export function SearchPage() {
       rating: 4.8,
       reviews: 234,
       includes: ['Lennupiletid', 'Hotell', 'Hommikusöök'],
-      date: '15-20 Apr 2026'
+      date: '15-20 Apr 2026',
+      description: 'Avasta valguse linn - romantiline Pariis, Eiffeli torn, Louvre ja Seine jõe ääres jalutamine.'
     },
     {
       id: 2,
@@ -36,7 +37,8 @@ export function SearchPage() {
       rating: 4.9,
       reviews: 187,
       includes: ['Lennupiletid', 'Hotell', 'Giid'],
-      date: '22-27 Apr 2026'
+      date: '22-27 Apr 2026',
+      description: 'Uurige igavest linna - Colosseum, Vatikani ning muistne Rooma kohalike giididega.'
     },
     {
       id: 3,
@@ -47,7 +49,8 @@ export function SearchPage() {
       rating: 4.7,
       reviews: 156,
       includes: ['Lennupiletid', 'Hotell', 'Hommikusöök'],
-      date: '10-13 Mai 2026'
+      date: '10-13 Mai 2026',
+      description: 'Kogege Gaudi arhitektuuri, Sagrada Familia ning Vahemerelist kultuuri ja ööelu.'
     },
     {
       id: 4,
@@ -58,7 +61,8 @@ export function SearchPage() {
       rating: 4.6,
       reviews: 203,
       includes: ['Lennupiletid', 'Hotell', 'Jalgrattarendi'],
-      date: '5-8 Mai 2026'
+      date: '5-8 Mai 2026',
+      description: 'Jalgrattasõit mööda kanaleid, Van Gogh muuseum ja liblikaid täis tulpide väljad.'
     },
     {
       id: 5,
@@ -69,7 +73,8 @@ export function SearchPage() {
       rating: 4.9,
       reviews: 312,
       includes: ['Lennupiletid', 'Hotell', 'Transfer'],
-      date: '1-7 Jun 2026'
+      date: '1-7 Jun 2026',
+      description: 'Valged majad, sinised kuplistid ning maailma kauneim päikeseloojang Egeuse mere kohal.'
     },
     {
       id: 6,
@@ -80,7 +85,8 @@ export function SearchPage() {
       rating: 4.8,
       reviews: 267,
       includes: ['Lennupiletid', 'Resort', 'Hommikusöök'],
-      date: '15-24 Jun 2026'
+      date: '15-24 Jun 2026',
+      description: 'Troopilised rannad, kristallselge vesi, Tai massage ja eksootiline köök paradiisis.'
     },
   ];
 
@@ -146,7 +152,11 @@ export function SearchPage() {
         {/* Results */}
         <div className="space-y-6">
           {filteredTrips.map((trip) => (
-            <Card key={trip.id} className="overflow-hidden hover:shadow-lg transition-all duration-300">
+            <Card
+              key={trip.id}
+              className="overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer"
+              onClick={() => navigate('/trip-detail', { state: { trip } })}
+            >
               <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-6">
                 {/* Image */}
                 <div className="relative aspect-[4/3] md:aspect-auto">
@@ -156,7 +166,10 @@ export function SearchPage() {
                     className="w-full h-full object-cover"
                   />
                   <button
-                    onClick={() => toggleFavorite(trip.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorite(trip.id);
+                    }}
                     className="absolute top-4 right-4 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg"
                   >
                     <Heart
@@ -193,16 +206,32 @@ export function SearchPage() {
                       </div>
                     </div>
 
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    <div className="flex flex-wrap gap-2 mb-2">
                       {trip.includes.map((item) => (
                         <Badge key={item} variant="secondary">
                           {item}
                         </Badge>
                       ))}
                     </div>
+
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                      {trip.description}
+                    </p>
+
+                    <Button
+                      variant="link"
+                      size="sm"
+                      className="h-auto p-0 text-primary"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate('/trip-detail', { state: { trip } });
+                      }}
+                    >
+                      LOE ROHKEM →
+                    </Button>
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t">
+                  <div className="flex items-center justify-between pt-4 border-t mt-3">
                     <div>
                       <div className="text-sm text-muted-foreground">Alates</div>
                       <div className="text-2xl font-semibold text-primary">€{trip.price}</div>
@@ -210,7 +239,10 @@ export function SearchPage() {
                     </div>
                     <Button
                       size="lg"
-                      onClick={() => navigate('/booking', { state: { trip } })}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate('/booking', { state: { trip } });
+                      }}
                     >
                       Broneeri
                     </Button>

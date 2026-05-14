@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router";
 import { Layout } from "./components/Layout";
 import { HomePage } from "./pages/HomePage";
 import { SearchPage } from "./pages/SearchPage";
+import { TripDetailPage } from "./pages/TripDetailPage";
 import { BookingPage } from "./pages/BookingPage";
 import { PaymentPage } from "./pages/PaymentPage";
 import { MyTripsPage } from "./pages/MyTripsPage";
@@ -23,6 +24,7 @@ export const router = createHashRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: "search", element: <SearchPage /> },
+      { path: "trip-detail", element: <TripDetailPage /> },
       { path: "booking", element: <BookingPage /> },
       { path: "payment", element: <PaymentPage /> },
       { path: "my-trips", element: <MyTripsPage /> },
